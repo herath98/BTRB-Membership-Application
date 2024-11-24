@@ -9,7 +9,11 @@ export function AdditionalInfo({ formData, updateFormData }: ComponentProps) {
   }
 
   if (!formData.practicingBehaviorTherapist && !formData.otherABAQualifications) {
-    return null
+    return (
+      <div className="space-y-4">
+        <h2>If you have selected any other ABA qualifications or have been practicing as a Behavior Therapist for the past 2 years, then only want to fill this.If you want to fill this, go back. Otherwise, proceed to the next step.</h2>
+      </div>
+    )
   }
 
   return (
