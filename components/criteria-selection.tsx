@@ -1,15 +1,37 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import type { ComponentProps } from '@/app/types/form-types'
+import { useState } from 'react'
 
 export function CriteriaSelection({ formData, updateFormData }: ComponentProps) {
+  const [expiredRBTFile, setExpiredRBTFile] = useState<File | null>(null)
+  const [expiredIBTFile, setExpiredIBTFile] = useState<File | null>(null)
+
   const handleChange = (checked: boolean, name: string) => {
     updateFormData({ [name]: checked })
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateFormData({ [e.target.name]: e.target.value })
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'RBT' | 'IBT') => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+      if (allowedTypes.includes(file.type)) {
+        updateFormData({ 
+          [`expired${type}FileName`]: file.name 
+        })
+        type === 'RBT' ? setExpiredRBTFile(file) : setExpiredIBTFile(file)
+      } else {
+        alert('Please upload only PDF or DOC/DOCX files.')
+        e.target.value = '' // Clear the file input
+      }
+    }
   }
 
   return (
@@ -58,7 +80,33 @@ export function CriteriaSelection({ formData, updateFormData }: ComponentProps) 
           />
           <Label htmlFor="expiredRBT">Expired RBT (Provide documentation)</Label>
         </div>
+        {formData.expiredRBT && (
+          <div className="space-y-2 pl-6">
+            <input 
+              type="file" 
+              id="expiredRBTFileUpload"
+              accept=".pdf,.doc,.docx"
+              onChange={(e) => handleFileChange(e, 'RBT')}
+              className="hidden"
+            />
+            <div className="flex items-center space-x-2">
+              <Button 
+                type="button" 
+                variant="outline"
+                onClick={() => document.getElementById('expiredRBTFileUpload')?.click()}
+              >
+                Upload Documentation
+              </Button>
+              {expiredRBTFile && (
+                <span className="text-sm text-gray-600">
+                  {expiredRBTFile.name}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
         
+      
         <div className="flex items-center space-x-2">
           <Checkbox
             id="voluntaryInactiveRBT"
@@ -92,6 +140,32 @@ export function CriteriaSelection({ formData, updateFormData }: ComponentProps) 
           />
           <Label htmlFor="expiredIBT">Expired IBT (Provide documentation)</Label>
         </div>
+        {formData.expiredIBT && (
+          <div className="space-y-2 pl-6">
+            <input 
+              type="file" 
+              id="expiredIBTFileUpload"
+              accept=".pdf,.doc,.docx"
+              onChange={(e) => handleFileChange(e, 'IBT')}
+              className="hidden"
+            />
+            <div className="flex items-center space-x-2">
+              <Button 
+                type="button" 
+                variant="outline"
+                onClick={() => document.getElementById('expiredIBTFileUpload')?.click()}
+              >
+                Upload Documentation
+              </Button>
+              {expiredIBTFile && (
+                <span className="text-sm text-gray-600">
+                  {expiredIBTFile.name}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+        
         
         <div className="flex items-center space-x-2">
           <Checkbox
