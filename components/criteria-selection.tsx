@@ -8,6 +8,7 @@ import { useState } from 'react'
 export function CriteriaSelection({ formData, updateFormData }: ComponentProps) {
   const [expiredRBTFile, setExpiredRBTFile] = useState<File | null>(null)
   const [expiredIBTFile, setExpiredIBTFile] = useState<File | null>(null)
+  const [behaviourAnalystFile, setBehaviourAnalystFile] = useState<File | null>(null)
 
   const handleChange = (checked: boolean, name: string) => {
     updateFormData({ [name]: checked })
@@ -17,7 +18,7 @@ export function CriteriaSelection({ formData, updateFormData }: ComponentProps) 
     updateFormData({ [e.target.name]: e.target.value })
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'RBT' | 'IBT') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'RBT' | 'IBT' | 'BA') => {
     const file = e.target.files?.[0]
     if (file) {
       // Validate file type
@@ -26,7 +27,7 @@ export function CriteriaSelection({ formData, updateFormData }: ComponentProps) 
         updateFormData({ 
           [`expired${type}FileName`]: file.name 
         })
-        type === 'RBT' ? setExpiredRBTFile(file) : setExpiredIBTFile(file)
+        type === 'RBT' ? setExpiredRBTFile(file) : type === 'IBT' ? setExpiredIBTFile(file) : setBehaviourAnalystFile(file)
       } else {
         alert('Please upload only PDF or DOC/DOCX files.')
         e.target.value = '' // Clear the file input
@@ -106,32 +107,6 @@ export function CriteriaSelection({ formData, updateFormData }: ComponentProps) 
           </div>
         )}
         
-      
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="voluntaryInactiveRBT"
-            checked={formData.voluntaryInactiveRBT || false}
-            onCheckedChange={(checked) => handleChange(checked as boolean, 'voluntaryInactiveRBT')}
-          />
-          <Label htmlFor="voluntaryInactiveRBT">Voluntary Inactive RBT</Label>
-        </div>
-        {formData.voluntaryInactiveRBT && (
-          <div className="space-y-2">
-            <Input
-              name="voluntaryInactiveRBTCertificationNo"
-              placeholder="Certification No."
-              value={formData.voluntaryInactiveRBTCertificationNo || ''}
-              onChange={handleInputChange}
-            />
-            <Input
-              name="voluntaryInactiveRBTReactivationDate"
-              placeholder="Date of reactivation"
-              value={formData.voluntaryInactiveRBTReactivationDate || ''}
-              onChange={handleInputChange}
-            />
-          </div>
-        )}
-        
         <div className="flex items-center space-x-2">
           <Checkbox
             id="expiredIBT"
@@ -165,27 +140,41 @@ export function CriteriaSelection({ formData, updateFormData }: ComponentProps) 
             </div>
           </div>
         )}
-        
-        
+
         <div className="flex items-center space-x-2">
           <Checkbox
-            id="practicingBehaviorTherapist"
-            checked={formData.practicingBehaviorTherapist || false}
-            onCheckedChange={(checked) => handleChange(checked as boolean, 'practicingBehaviorTherapist')}
+            id="behaviourAnalyst"
+            checked={formData.behaviourAnalyst || false}
+            onCheckedChange={(checked) => handleChange(checked as boolean, 'behaviourAnalyst')}
           />
-          <Label htmlFor="practicingBehaviorTherapist">Practicing as Behavior Therapist for the past 2 years</Label>
+          <Label htmlFor="behaviourAnalyst">Behaviour Analyst or Assistant Behaviour Analyst</Label>
         </div>
-        
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="otherABAQualifications"
-            checked={formData.otherABAQualifications || false}
-            onCheckedChange={(checked) => handleChange(checked as boolean, 'otherABAQualifications')}
-          />
-          <Label htmlFor="otherABAQualifications">Any other ABA qualifications</Label>
-        </div>
+        {formData.behaviourAnalyst && (
+          <div className="space-y-2 pl-6">
+            <input 
+              type="file" 
+              id="behaviourAnalystFileUpload"
+              accept=".pdf,.doc,.docx"
+              onChange={(e) => handleFileChange(e, 'BA')}
+              className="hidden"
+            />
+            <div className="flex items-center space-x-2">
+              <Button 
+                type="button" 
+                variant="outline"
+                onClick={() => document.getElementById('behaviourAnalystFileUpload')?.click()}
+              >
+                Upload Documentation
+              </Button>
+              {behaviourAnalystFile && (
+                <span className="text-sm text-gray-600">
+                  {behaviourAnalystFile.name}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
 }
-

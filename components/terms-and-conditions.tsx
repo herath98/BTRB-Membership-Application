@@ -2,7 +2,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import type { ComponentProps } from '@/app/types/form-types'
 
-
 type HandleChange = (checked: boolean, name: string) => void;
 
 export function TermsAndConditions({ formData, updateFormData }: ComponentProps) {
@@ -12,14 +11,14 @@ export function TermsAndConditions({ formData, updateFormData }: ComponentProps)
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-semibold">Section 4. Terms and Conditions</h2>
+      <h2 className="text-2xl font-semibold">Section 4. Terms of Service</h2>
       <div className="space-y-2">
         <div className="flex items-start space-x-2">
-        <Checkbox
-  id="resident"
-  checked={formData.resident || false}
-  onCheckedChange={(checked) => handleChange(!!checked, 'resident')}
-/>
+          <Checkbox
+            id="resident"
+            checked={formData.resident || false}
+            onCheckedChange={(checked) => handleChange(!!checked, 'resident')}
+          />
           <Label htmlFor="resident" className="leading-normal">
             I am a current resident of Sri Lanka or have been a resident in the past two (2) years.
           </Label>
@@ -84,8 +83,17 @@ export function TermsAndConditions({ formData, updateFormData }: ComponentProps)
             I agree to the prospective ethical guidelines of the BTRB. Until these guidelines are implemented, the BTRB will adopt and abide by the current IBAO code of ethics.
           </Label>
         </div>
+        <div className="flex items-start space-x-2">
+          <Checkbox
+            id="agreePoliceClearance"
+            checked={formData.agreePoliceClearance || false}
+            onCheckedChange={(checked) => handleChange(!!checked, 'agreePoliceClearance')}
+          />
+          <Label htmlFor="agreePoliceClearance" className="leading-normal">
+            I agree to submit a police clearance report if I have selected &quot;Practicing as Behaviour Therapist for the past 2 years&quot; or &quot;Any other ABA qualifications&quot; after my application is accepted.
+          </Label>
+        </div>
       </div>
     </div>
   )
 }
-

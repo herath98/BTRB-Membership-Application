@@ -8,12 +8,15 @@ import { CriteriaSelection } from '@/components/criteria-selection';
 import { AdditionalInfo } from '@/components/additional-info';
 import { TermsAndConditions } from '@/components/terms-and-conditions';
 import { ReviewAndSubmit } from '@/components/review-and-submit';
+import { OtpVerificationModal } from '@/components/OtpVerificationModal';
 import type { ApplicationFormData } from './types/form-types';
 
 export default function BTRBApplicationForm() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<ApplicationFormData>({});
   const [showError, setShowError] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
 
   const updateFormData = (data: any) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -29,7 +32,8 @@ export default function BTRBApplicationForm() {
           formData.dateOfBirth?.trim() &&
           formData.address?.trim() &&
           formData.phone?.trim() &&
-          formData.email?.trim()
+          formData.email?.trim() &&
+          formData.nicOrPassport?.trim()
         );
       // Add validation for other steps as needed
       default:
@@ -39,8 +43,13 @@ export default function BTRBApplicationForm() {
 
   const nextStep = () => {
     if (validateStep()) {
-      setStep((prev) => prev + 1);
-      setShowError(false);
+      if (step === 1 && !emailVerified) {
+        // Trigger OTP verification modal
+        setIsOtpModalOpen(true);
+      } else {
+        setStep((prev) => prev + 1);
+        setShowError(false);
+      }
     } else {
       setShowError(true);
     }
@@ -49,6 +58,18 @@ export default function BTRBApplicationForm() {
   const prevStep = () => {
     setStep((prev) => prev - 1);
     setShowError(false);
+  };
+
+  const handleOtpVerify = (otp: string) => {
+    // Simulate OTP verification
+    if (otp === '123456') {
+      setEmailVerified(true);
+      setIsOtpModalOpen(false);
+      alert('Email verified successfully.');
+      setStep((prev) => prev + 1);
+    } else {
+      alert('Invalid OTP. Please try again.');
+    }
   };
 
   const renderStep = () => {
@@ -73,11 +94,8 @@ export default function BTRBApplicationForm() {
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">
-            BTRB Membership Application
+            Registered Behaviour Therapist Membership Application
           </CardTitle>
-          <CardDescription className="text-center">
-            Behaviour Therapist Registration Board
-          </CardDescription>
         </CardHeader>
         <CardContent>
           {showError && (
@@ -102,6 +120,12 @@ export default function BTRBApplicationForm() {
           </div>
         </CardContent>
       </Card>
+      <OtpVerificationModal
+        isOpen={isOtpModalOpen}
+        onClose={() => setIsOtpModalOpen(false)}
+        onVerify={handleOtpVerify}
+        onResend={() => alert('OTP resent')}
+      />
     </div>
   );
 }

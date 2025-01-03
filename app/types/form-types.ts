@@ -5,7 +5,11 @@ export interface ApplicationFormData {
   dateOfBirth?: string;
   address?: string;
   phone?: string;
+  phoneOptional?: string; // Optional phone number
   email?: string;
+  nicOrPassport?: string; // NIC or Passport field
+  nicFrontFileName?: string; // NIC Front file name field
+  nicBackFileName?: string; // NIC Back file name field
 
   // Criteria Selection
   currentRBT?: boolean;
@@ -13,30 +17,48 @@ export interface ApplicationFormData {
   currentIBT?: boolean;
   ibtCertificationNo?: string;
   expiredRBT?: boolean;
+  expiredRBTFileName?: string;
   voluntaryInactiveRBT?: boolean;
   voluntaryInactiveRBTCertificationNo?: string;
   voluntaryInactiveRBTReactivationDate?: string;
   expiredIBT?: boolean;
+  expiredIBTFileName?: string;
   practicingBehaviorTherapist?: boolean;
   otherABAQualifications?: boolean;
+  behaviourAnalyst?: boolean;
+
 
   // Additional Information
-  trainingDates?: string;
   institution?: string;
+  periodOfEducation?: string;
   qualifications?: string;
+  educationFileName?: string;
+  workPlaceName?: string;
+  workPlaceAddress?: string;
+  employmentPeriod?: string;
+  designation?: string;
   fullTimePartTime?: string;
-  otherInfo?: string;
-  reference?: string;
   explanationOfServices?: string;
+  workExperienceFileName?: string;
+  cvFileName?: string;
+  insuranceFileName?: string;
 
   // Terms and Conditions
   resident?: boolean;
+
   agreeObjectives?: boolean;
+
   agreeMaintenance?: boolean;
+
   agreeLicense?: boolean;
+
   agreeUpdate?: boolean;
+
   agreeMalpractice?: boolean;
+
   agreeEthics?: boolean;
+  agreePoliceClearance?: boolean;
+
 }
 
 export interface ComponentProps {
